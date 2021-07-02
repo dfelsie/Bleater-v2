@@ -6,7 +6,8 @@ import {
 	MenuItem,
 	DialogContent,
 } from "@material-ui/core";
-
+import goat1 from "../images/goat2.jpg";
+import goat2 from "../images/goat2.jpg";
 import {
 	Formik,
 	Field,
@@ -19,9 +20,14 @@ import FormControl from "@material-ui/core/FormControl";
 import Input from "@material-ui/core/Input";
 import InputLabel from "@material-ui/core/InputLabel";
 import TextField from "@material-ui/core/TextField";
+import { useSelector, useDispatch } from "react-redux";
 
 export default function ProfileComponent(props) {
 	const axios = require("axios");
+	const userName = useSelector((state) => {
+		console.log(state, "Stjauny");
+		return state.app.user;
+	});
 	//console.log(props, "prouser");
 
 	return (
@@ -30,7 +36,7 @@ export default function ProfileComponent(props) {
 				<div>
 					<div>
 						{" "}
-						<h4>Profile</h4>
+						<h4>Profile of {userName || "No one"}</h4>
 					</div>
 				</div>
 				<div>
@@ -165,6 +171,8 @@ export default function ProfileComponent(props) {
 										}}
 									>
 										<div>
+											<img src={goat1} />
+
 											<input
 												id="profileFile"
 												name="profileFile"
@@ -187,29 +195,7 @@ export default function ProfileComponent(props) {
 												}}
 											/>
 										</div>
-										<div>
-											<input
-												id="file"
-												name="file"
-												type="file"
-												style={{
-													opacity: "0",
-													cursor: "pointer",
-													width: "100%",
-													height: "100%",
-													position: "absolute",
-													top: "0",
-												}}
-												onChange={(event) => {
-													values.file = event.currentTarget.files[0];
-													console.log(
-														values.file
-														//	event.currentTarget.files[0]
-													);
-												}}
-											/>
-										</div>
-										<div></div>
+
 										<div style={{ marginTop: "50px" }}>
 											<Field
 												fullWidth
@@ -258,8 +244,29 @@ export default function ProfileComponent(props) {
 												variant="outlined"
 											></Field>
 										</div>
-
-										<div></div>
+										<div>
+											<img src={goat1} />
+											<input
+												id="file"
+												name="file"
+												type="file"
+												style={{
+													opacity: "0",
+													cursor: "pointer",
+													width: "100%",
+													height: "100%",
+													position: "absolute",
+													top: "0",
+												}}
+												onChange={(event) => {
+													values.file = event.currentTarget.files[0];
+													console.log(
+														values.file
+														//	event.currentTarget.files[0]
+													);
+												}}
+											/>
+										</div>
 										<div>
 											<Button type="submit" variant="contained">
 												Submit

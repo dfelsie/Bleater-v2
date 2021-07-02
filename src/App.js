@@ -1,6 +1,8 @@
 //import logo from "./logo.svg";
 import LogIn from "./LogIn";
 import SignUp from "./SignUp";
+import goat1 from "./images/bleating_goat.jpg";
+import goat2 from "./images/goat2.jpg";
 import Button from "@material-ui/core/Button";
 import "./App.css";
 import { useState, useEffect } from "react";
@@ -9,27 +11,78 @@ import {
 	Switch,
 	Route,
 	Link,
+	Redirect,
+	useLocation,
 } from "react-router-dom";
 import axios from "axios";
 import ProfileComponent from "./components/ProfileComponent";
 import HomeComponent from "./components/HomeComponent";
-import { connect } from "react-redux";
-
-const mapStateToProps = (state) => {
-	return { articles: state.articles, ...state };
-};
+import { useSelector, useDispatch } from "react-redux";
+import { setUser } from "./features/app/appslice";
 
 function App(props) {
+	const [isAuth, setIsAuth] = useState(false);
+	const [isLoading, setIsLoading] = useState(true);
+	const [userEmail, setUserEmail] = useState(null);
+
+	useEffect(dummy, []);
+
+	const userName = useSelector((state) => {
+		console.log(state, "Stjauny");
+		return state.app.user;
+	});
+	const dispatch = useDispatch();
+
 	/*dummy().then((res) => {
 		console.log(res, "rienin");
 		return res;
 	});*/
 	//console.log(dummy(), "INI");
 	console.log(props, "Proper");
+	function dumbo(user) {
+		dispatch(setUser(user));
+	}
+	async function dummy() {
+		const aut = await axios
+			.get("http://localhost:3307/authenticate", {
+				withCredentials: true,
+			})
+			.catch((e) => console.log(e.message, "Ntbub"));
 
+		//setIsAuth(aut.data.loggedIn === "true");
+		//setIsAuth(false);
+		setIsLoading(false);
+		let authYes = aut.data.loggedIn === "true";
+
+		console.log(aut.data, authYes, "JNJn");
+		setIsAuth(authYes);
+		if (authYes) {
+			console.log("j jn", aut.data.user.email);
+			setUserEmail(aut.data.user.email);
+		}
+		console.log(userEmail);
+	}
+	if (isLoading) {
+		return null;
+	}
 	return (
 		<Router>
 			<div>
+				<Link to="/signup">
+					<Button variant="outlined">Sign up</Button>
+				</Link>
+				<Link to="/login">
+					<Button variant="outlined">Log in</Button>
+				</Link>
+				<Link to="/">
+					<Button variant="outlined">Index</Button>
+				</Link>
+				<Link to="/profile">
+					<Button variant="outlined">Profile</Button>
+				</Link>
+				<Link to="/home">
+					<Button variant="outlined">Home</Button>
+				</Link>
 				{/*
 				<ul>
 					<li>
@@ -58,19 +111,30 @@ function App(props) {
 
 				<Switch>
 					<Route exact path="/">
-						<Home />
+						{isAuth ? <Home /> : <Redirect to="/login" />}
 					</Route>
 					<Route path="/login">
-						<LogIn />
+						<LogIn setIsAuth={setIsAuth} disp={dumbo} />
 					</Route>
 					<Route path="/signup">
 						<SignUp />
 					</Route>
-					<Route path="/stuff">
-						<ProfileComponent />
+					<Route path="/profile">
+						{isAuth ? (
+							<ProfileComponent props={{ email: userEmail }} />
+						) : (
+							<Redirect to="/login" />
+						)}
 					</Route>
 					<Route path="/home">
-						<HomeComponent />
+						{isAuth ? (
+							<HomeComponent props={{ email: userEmail }} />
+						) : (
+							<Redirect to="/login" />
+						)}
+					</Route>
+					<Route path="/">
+						<h1>Doesn't Exist</h1>
 					</Route>
 				</Switch>
 			</div>
@@ -78,78 +142,37 @@ function App(props) {
 	);
 }
 
-function Home() {
-	const [isAuth, setIsAuth] = useState(false);
-	const [isLoading, setIsLoading] = useState(true);
+function Redi() {
+	<Router>
+		<h1>Log in!</h1>
+		<Link to="/login">
+			<Button variant="outlined">Log in</Button>
+		</Link>
+		<Route path="/login">
+			<LogIn />
+		</Route>
+	</Router>;
+}
 
+function Home() {
 	async function dummy() {
 		const aut = await axios
 			.get("http://localhost:3307/authenticate", {
 				withCredentials: true,
 			})
 			.catch((e) => console.log(e.message));
-		setIsAuth(aut.data.loggedIn === "true");
+		//setIsAuth(aut.data.loggedIn === "true");
 		//setIsAuth(false);
-		setIsLoading(false);
+		//setIsLoading(false);
 		console.log(aut.data, aut.data.loggedIn === "true", "JNJn");
 	}
-	console.log();
-	useEffect(dummy, []);
 	return (
 		<div>
-			<Link to="/signup">
-				<Button variant="outlined">Sign up</Button>
-			</Link>
-			<Link to="/login">
-				<Button variant="outlined">Log in</Button>
-			</Link>
-			<Link to="/">
-				<Button variant="outlined">Index</Button>
-			</Link>
-			<Link to="/stuff">
-				<Button variant="outlined">Profile</Button>
-			</Link>
-			<Link to="/home">
-				<Button variant="outlined">Home</Button>
-			</Link>
+			<img src={goat1} alt="goat"></img>
+			<img src={goat2} alt="goat"></img>
 			<h1>Welcome to Bleater</h1>
 			<h4>Join Bleater Today</h4>
-			{
-				<div>
-					<button
-						onClick={() => {
-							try {
-								axios
-									.get("http://localhost:3307/secret", {
-										withCredentials: true,
-									})
-									.catch((e) => console.log(e));
-							} catch (e) {
-								console.log(e);
-							}
-						}}
-					>
-						Secret
-					</button>
-					<button
-						onClick={() => {
-							try {
-								axios
-									.get("http://localhost:3307/authenticate", {
-										withCredentials: true,
-									})
-									.catch((e) => console.log(e));
-							} catch (e) {
-								console.log(e);
-							}
-						}}
-					>
-						Auth
-					</button>
-				</div>
-			}
 		</div>
 	);
 }
-App = connect(mapStateToProps)(App);
 export default App;

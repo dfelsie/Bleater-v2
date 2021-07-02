@@ -17,21 +17,6 @@ import { Link } from "react-router-dom";
 export default function SignupCard(props) {
 	return (
 		<div style={{}}>
-			<Link to="/signup">
-				<Button variant="outlined">Sign up</Button>
-			</Link>
-			<Link to="/login">
-				<Button variant="outlined">Log in</Button>
-			</Link>
-			<Link to="/">
-				<Button variant="outlined">Index</Button>
-			</Link>
-			<Link to="/stuff">
-				<Button variant="outlined">Profile</Button>
-			</Link>
-			<Link to="/home">
-				<Button variant="outlined">Home</Button>
-			</Link>
 			<h1 style={{ textAlign: "center" }}>Sign up!</h1>
 			<Formik
 				validateOnChange={true}

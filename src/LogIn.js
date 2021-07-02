@@ -1,9 +1,9 @@
 import React from "react";
 import LoginCard from "./components/LoginCard";
-export default function LogIn() {
+export default function LogIn(props) {
 	return (
 		<div>
-			<LoginCard></LoginCard>
+			<LoginCard props={props}></LoginCard>
 		</div>
 	);
 }

@@ -13,26 +13,19 @@ import InputLabel from "@material-ui/core/InputLabel";
 import TextField from "@material-ui/core/TextField";
 import FormHelperText from "@material-ui/core/TextField";
 import axios from "axios";
-import { Link } from "react-router-dom";
-export default function LoginCard(props) {
+import { Link, useHistory } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+
+export default function LoginCard({ props }) {
+	let history = useHistory();
+	const userName = useSelector((state) => {
+		console.log(state, "Stjauny");
+		return state.app.user;
+	});
+	console.log(props, "okofj");
 	return (
 		<div>
-			<Link to="/signup">
-				<Button variant="outlined">Sign up</Button>
-			</Link>
-			<Link to="/login">
-				<Button variant="outlined">Log in</Button>
-			</Link>
-			<Link to="/">
-				<Button variant="outlined">Index</Button>
-			</Link>
-			<Link to="/stuff">
-				<Button variant="outlined">Profile</Button>
-			</Link>
-			<Link to="/home">
-				<Button variant="outlined">Home</Button>
-			</Link>
-			<h1 style={{ textAlign: "center" }}>Log in</h1>
+			<h1 style={{ textAlign: "center" }}>{userName || "Log in"}</h1>
 			<Formik
 				validateOnChange={true}
 				validate={(values) => {
@@ -46,10 +39,10 @@ export default function LoginCard(props) {
 					email: "",
 					password: "",
 				}}
-				onSubmit={(data) => {
+				onSubmit={async (data) => {
 					// make async call
 					console.log("Login submit: ", data);
-					axios
+					await axios
 						.post(
 							"http://localhost:3307/login",
 							{
@@ -62,10 +55,14 @@ export default function LoginCard(props) {
 						)
 						.then(function (response) {
 							// handle success
-							console.log(response);
+							console.log(response, "iununun");
+							window.localStorage.setItem("user", data.email);
+							props.disp(data.email);
+							props.setIsAuth(true);
+							history.push("/home");
 						})
 						.catch(function (e) {
-							console.log(e.message);
+							console.log(e.message, "whooops");
 						});
 					//let res = props.logFunc(data.email, data.password);
 					//console.log(res);

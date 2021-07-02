@@ -1,6 +1,6 @@
 import React from "react";
 import Button from "@material-ui/core/Button";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
 	Formik,
 	Field,
@@ -10,8 +10,22 @@ import {
 	FieldArray,
 } from "formik";
 import TextField from "@material-ui/core/TextField";
+import { useSelector, useDispatch } from "react-redux";
 
 const axios = require("axios");
+
+async function dummy(disp) {
+	const aut = await axios
+		.get("http://localhost:3307/authenticate", {
+			withCredentials: true,
+		})
+		.catch((e) => console.log(e.message, "Ntbub"));
+
+	let authYes = aut.data.loggedIn === "true";
+	if (authYes) {
+		console.log("j jn", aut.data.user.email);
+	}
+}
 
 async function subFunc(data, email, time) {
 	// make async call
@@ -26,20 +40,62 @@ async function subFunc(data, email, time) {
 			console.log(response);
 		});
 }
+
+async function gBleats(userName) {
+	return await axios
+		.post("http://localhost:3307/getbleats", {
+			withCredentials: true,
+			user: userName,
+		})
+		.catch((e) => console.log(e.message, "Ntbub"));
+}
 export default function HomeComponent({ props }) {
+	const [bList, setBList] = useState(null);
+	const [loading, setLoading] = useState(true);
+	const userName = useSelector((state) => {
+		console.log(state, "Stjauny");
+		return state.app.user;
+	});
+
+	useEffect(() => {
+		const fetchData = async () => {
+			const result = await axios.post(
+				"http://localhost:3307/getbleats",
+				{
+					withCredentials: true,
+					user: userName,
+				}
+			);
+
+			//console.log(result.data, "reuc");
+
+			setBList(result.data.bList);
+			setLoading(false);
+		};
+
+		fetchData();
+	}, []);
+
+	//setBList(gBleats(userName));
+	console.log(bList, "Bleato's");
+
 	//const user = props.user;
 	//const bleats = props.bleats;
 	//const hideFunc = props.hideFunc;
 	//console.log(props);
 	const [bTime, setBTime] = useState(null);
+
 	//	console.log(bleats.bleats, "Baaa");
 
 	//const [msgList, setMsg] = useState([...bleats.bleats]);
+	if (loading) {
+		return null;
+	}
 	return (
 		<>
 			<div>
 				<div>
-					<h2> Bleats </h2>
+					<h2> Bleats for user {userName || "No Body"} </h2>
 				</div>
 				<div>
 					<div>
@@ -64,8 +120,31 @@ export default function HomeComponent({ props }) {
 										<div></div>
 										<div>
 											<Button
-												type="submit"
+												type="button"
 												variant="contained"
+												onClick={async () => {
+													console.log("tex", values.bleat);
+													await axios
+														.post(
+															"http://localhost:3307/addbleat",
+															{
+																text: values.bleat,
+																user: userName,
+															},
+															{
+																withCredentials: true,
+															}
+														)
+														.then((res) => console.log("bRes", res));
+													setBList([
+														...bList,
+														{
+															text: values.bleat,
+															user: userName,
+															createdAt: new Date().toISOString(),
+														},
+													]);
+												}}
 												/*onClick={() => {
 													const time = new Date()
 														.toISOString()
@@ -92,17 +171,19 @@ export default function HomeComponent({ props }) {
 					</div>
 				</div>
 				<div>
-					{/*msgList.map((msg, ind) => {
-						return (
-							<div key={`msg${ind}`}>
-								<p>{msg.bleatmsg}</p>
-								<br />
-								<p> {msg.bleatemail}</p>
-								<br />
-								<p>{msg.bleattimestamp || "30xx"}</p>
-							</div>
-						);
-					})*/}
+					{bList === null
+						? "Yerr"
+						: bList.map((bleat, ind) => {
+								return (
+									<div key={`bleat${ind}`}>
+										<p>{bleat.text}</p>
+										<br />
+										<p> {bleat.userEmail}</p>
+										<br />
+										<p>{bleat.createdAt || "30xx"}</p>
+									</div>
+								);
+						  })}
 				</div>
 			</div>
 			<div>
