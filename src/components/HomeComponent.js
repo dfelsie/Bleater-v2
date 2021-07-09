@@ -50,26 +50,29 @@ async function gBleats(userName) {
 		.catch((e) => console.log(e.message, "Ntbub"));
 }
 export default function HomeComponent({ props }) {
+	useSelector((state) => {
+		console.log(state, "status");
+	});
 	const [bList, setBList] = useState(null);
 	const [loading, setLoading] = useState(true);
-	const userName = useSelector((state) => {
-		console.log(state, "Stjauny");
+	/*const userName = useSelector((state) => {
+		console.log(state, "Strauny");
 		return state.app.user;
-	});
+	});*/
 
 	useEffect(() => {
 		const fetchData = async () => {
-			const result = await axios.post(
+			/*const result = await axios.post(
 				"http://localhost:3307/getbleats",
 				{
 					withCredentials: true,
 					user: userName,
 				}
-			);
+			);*/
 
 			//console.log(result.data, "reuc");
 
-			setBList(result.data.bList);
+			//setBList(result.data.bList);
 			setLoading(false);
 		};
 
@@ -95,7 +98,7 @@ export default function HomeComponent({ props }) {
 		<>
 			<div>
 				<div>
-					<h2> Bleats for user {userName || "No Body"} </h2>
+					<h2> Bleats for user {/*userName || "No Body"*/} </h2>
 				</div>
 				<div>
 					<div>
@@ -129,21 +132,21 @@ export default function HomeComponent({ props }) {
 															"http://localhost:3307/addbleat",
 															{
 																text: values.bleat,
-																user: userName,
+																//	user: userName,
 															},
 															{
 																withCredentials: true,
 															}
 														)
 														.then((res) => console.log("bRes", res));
-													setBList([
+													/*setBList([
 														...bList,
 														{
 															text: values.bleat,
 															user: userName,
 															createdAt: new Date().toISOString(),
 														},
-													]);
+													]);*/
 												}}
 												/*onClick={() => {
 													const time = new Date()

@@ -24,10 +24,10 @@ import { useSelector, useDispatch } from "react-redux";
 
 export default function ProfileComponent(props) {
 	const axios = require("axios");
-	const userName = useSelector((state) => {
-		console.log(state, "Stjauny");
+	/*const userName = useSelector((state) => {
+		console.log(state, "Stmauny");
 		return state.app.user;
-	});
+	});*/
 	//console.log(props, "prouser");
 
 	return (
@@ -36,7 +36,7 @@ export default function ProfileComponent(props) {
 				<div>
 					<div>
 						{" "}
-						<h4>Profile of {userName || "No one"}</h4>
+						<h4>Profile of {/*userName || "No one"*/}</h4>
 					</div>
 				</div>
 				<div>

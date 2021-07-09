@@ -18,14 +18,14 @@ import { useSelector, useDispatch } from "react-redux";
 
 export default function LoginCard({ props }) {
 	let history = useHistory();
-	const userName = useSelector((state) => {
-		console.log(state, "Stjauny");
+	/*const userName = useSelector((state) => {
+		console.log(state, "Stlauny");
 		return state.app.user;
-	});
+	});*/
 	console.log(props, "okofj");
 	return (
 		<div>
-			<h1 style={{ textAlign: "center" }}>{userName || "Log in"}</h1>
+			<h1 style={{ textAlign: "center" }}>{"Log in"}</h1>
 			<Formik
 				validateOnChange={true}
 				validate={(values) => {
@@ -58,7 +58,7 @@ export default function LoginCard({ props }) {
 							console.log(response, "iununun");
 							window.localStorage.setItem("user", data.email);
 							props.disp(data.email);
-							props.setIsAuth(true);
+							//props.setIsAuth(true);
 							history.push("/home");
 						})
 						.catch(function (e) {
